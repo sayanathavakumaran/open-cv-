@@ -9,12 +9,15 @@ imglist = []
 totalw = 0
 totalh = 0
 
+type = input("do you want your video repeated or shuffled: ")
+
 for x in os.listdir(path):
     print(x)
     if x.endswith(('.jpeg','.jpg','.png')):
         list1.append(x)
         #x = cv2.resize(x,(600,400))
 
+print(len(list1))
 print(list1)
 meanw = 0
 meanh = 0
@@ -37,15 +40,24 @@ for t in range(len(imglist)):
     b.save(os.path.join(path,list1[t]))
 print(imglist)
 
-random.shuffle(list1)
-frame = cv2.imread(os.path.join(path,list1[0]))
-height,width,layers = frame.shape
-videob = cv2.VideoWriter(os.path.join(path,"video.avi"),cv2.VideoWriter_fourcc(*'XVID'),1,(width,height))
-videob.write(frame)
-
-for x in range(1,len(list1)):
-    frame = cv2.imread(os.path.join(path,list1[x]))
+if type == "shuffled":
+    random.shuffle(list1)
+    frame = cv2.imread(os.path.join(path,list1[0]))
+    height,width,layers = frame.shape
+    videob = cv2.VideoWriter(os.path.join(path,"video.avi"),cv2.VideoWriter_fourcc(*'XVID'),1,(width,height))
     videob.write(frame)
+    for x in range(1,len(list1)):
+        frame = cv2.imread(os.path.join(path,list1[x]))
+        videob.write(frame)
+elif type == "repeated":
+    frame = cv2.imread(os.path.join(path,list1[0]))
+    height,width,layers = frame.shape
+    videob = cv2.VideoWriter(os.path.join(path,"video.avi"),cv2.VideoWriter_fourcc(*'XVID'),1,(width,height))
+    videob.write(frame)
+    for y in range(2):
+        for x in range(1,len(list1)):
+            frame = cv2.imread(os.path.join(path,list1[x]))
+            videob.write(frame)
 
 cv2.destroyAllWindows()
 videob.release()
