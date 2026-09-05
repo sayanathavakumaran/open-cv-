@@ -21,7 +21,7 @@ for subdir,dir,file in os.walk(folder):
             newpath = path+"/"+filename
             label = id
             images.append(cv2.imread(newpath,0))
-            labels.append(label)
+            labels.append(int(label))
         id += 1
 
 height1 = 100
@@ -41,16 +41,16 @@ while True:
     if exists1:
         face1 = facedetector1.detectMultiScale(greyimg,scaleFactor=1.3,minNeighbors=4)
         for x1,y1,w1,h1 in face1:
-            cv2.rectangle(face1,(x1-100,y1-100),(x1+w1+75,y1+h1+100),(0,0,255),3)
+            cv2.rectangle(image,(x1-100,y1-100),(x1+w1+75,y1+h1+100),(0,0,255),3)
             face1 = greyimg[y1-100:y1+h1+100,x1-100:x1+w1+75]
             cropped1 = cv2.resize(greyimg,(width1,height1))
             prediction = model.predict(cropped1)
-            cv2.rectangle(face1,(x1-100,y1-100),(x1+w1+75,y1+h1+100),(0,255,0),3)
-            if prediction[1]<100:
+            cv2.rectangle(image,(x1-100,y1-100),(x1+w1+75,y1+h1+100),(0,255,0),3)
+            if prediction[1]<200:
                 cv2.putText(image,"%s -%.0f"%(names[prediction[0]],prediction[1]),(x1-150,y1-150),cv2.FONT_HERSHEY_PLAIN,1,(255,0,0))
             else:
                 cv2.putText(image,"person not recognised",(x1-150,y1-150),cv2.FONT_HERSHEY_PLAIN,1,(255,0,0))
-        cv2.imshow("screen",image)
+            cv2.imshow("screen",image)
         key = cv2.waitKey(10)
         if key == 27:
             break

@@ -6,8 +6,7 @@ print("OpenCV:", cv2.__version__)
 print("cv2 location:", cv2.__file__)
 print("Has face:", hasattr(cv2, "face"))
 
-modfile = cv2.data.haarcascades+'haarcascade_frontalface_default.xml'
-folder = os.path.dirname(os.path.abspath(__file__))
+modfile = 'haarcascade_frontalface_default.xml'
 
 count = 0
 folder = os.path.dirname(os.path.abspath(__file__))
@@ -23,19 +22,22 @@ else:
     webcam = cv2.VideoCapture(0)
     while count < 5:
         exists, image= webcam.read()
+        greyimg = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
         if exists:
-            face = facedetector.detectMultiScale(image,scaleFactor=1.3,minNeighbors=4)
+            face = facedetector.detectMultiScale(greyimg,scaleFactor=1.3,minNeighbors=4)
             for x,y,w,h in face:
                 cv2.rectangle(image,(x-100,y-100),(x+w+75,y+h+100),(0,0,255),3)
-                face = image[y-100:y+h+100,x-100:x+w+75]
+                face = greyimg[y-100:y+h+100,x-100:x+w+75]
                 cropped = cv2.resize(face,(width,height))
                 filename = os.path.join(pics,"final"+str(count+1)+".png")
                 cv2.imwrite(filename,cropped)
                 count += 1
-            cv2.imshow("screen",image)
-            key = cv2.waitKey(0)
+                cv2.imshow("screen",image)
+                key = cv2.waitKey(0)
+        else:
+            print("doesn't exist")
     webcam.release()
-images = []
+'''images = []
 labels = []
 names = {}
 id = 0
@@ -79,5 +81,5 @@ while True:
         cv2.imshow("screen",image)
         key = cv2.waitKey(10)
         if key == 27:
-            break
+            break'''
 cv2.destroyAllWindows()
